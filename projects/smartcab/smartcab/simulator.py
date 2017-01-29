@@ -92,17 +92,23 @@ class Simulator(object):
 
             # Set log files
             if a.learning:
-                if self.optimized: # Whether the user is optimizing the parameters and decay functions
-                    self.log_filename = os.path.join("logs", "sim_improved-learning.csv")
-                    self.table_filename = os.path.join("logs","sim_improved-learning.txt")
-                else: 
-                    self.log_filename = os.path.join("logs", "sim_default-learning.csv")
-                    self.table_filename = os.path.join("logs","sim_default-learning.txt")
+                # if self.optimized: # Whether the user is optimizing the parameters and decay functions
+                #     self.log_filename = os.path.join("logs", "sim_improved-learning.csv")
+                #     self.table_filename = os.path.join("logs","sim_improved-learning.txt")
+                # else:
+                #     self.log_filename = os.path.join("logs", "sim_default-learning.csv")
+                #     self.table_filename = os.path.join("logs","sim_default-learning.txt")
+                file_name = 'alpha_epsildon_decay_sinc.%s'
+                self.log_filename = os.path.join("logs", file_name % "csv")
+                self.table_filename = os.path.join("logs", file_name % "txt")
 
                 self.table_file = open(self.table_filename, 'wb')
             else:
                 self.log_filename = os.path.join("logs", "sim_no-learning.csv")
-            
+
+            # self.log_filename = os.path.join("logs", "sim_modified_learning.csv")
+            # self.table_filename = os.path.join("logs", "sim_modified_learning.txt")
+
             self.log_fields = ['trial', 'testing', 'parameters', 'initial_deadline', 'final_deadline', 'net_reward', 'actions', 'success']
             self.log_file = open(self.log_filename, 'wb')
             self.log_writer = csv.DictWriter(self.log_file, fieldnames=self.log_fields)
@@ -154,7 +160,7 @@ class Simulator(object):
             print "\-------------------------"
             print 
 
-            self.env.reset(testing)
+            self.env.reset(testing, trial=trial)
             self.current_time = 0.0
             self.last_updated = 0.0
             self.start_time = time.time()
@@ -299,7 +305,6 @@ class Simulator(object):
             else:
                 print "Agent not set to learn."
 
-                
     def render(self, trial, testing=False):
         """ This is the GUI render display of the simulation. 
             Supplementary trial data can be found from render_text. """
